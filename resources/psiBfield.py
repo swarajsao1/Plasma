@@ -1,6 +1,12 @@
+import os 
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+file_path  = os.path.join(BASE_DIR, "g_file.in")
+
 from freeqdsk import geqdsk
 
-with open("g_file.in", 'r') as f:
+with open(file_path, 'r') as f:
     g = geqdsk.read(f)
 
 
@@ -27,4 +33,4 @@ fpol_interp = interp1d(psi_grid, g.fpol)
 
 Bphi = fpol_interp(g.psi)/r_coords
 
-print("psi BR Bphi BZ calculate with g file keywords.")
+print("g_file keywords extracted, BR Bphi BZ calculated.")
