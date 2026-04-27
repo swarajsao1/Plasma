@@ -1,4 +1,5 @@
 import os 
+import sys
 import numpy as np
 from freeqdsk import geqdsk
 from scipy.interpolate import interp1d

@@ -1,0 +1,16 @@
+{
+    "name": "Plasma Simulation Environment",
+    "image": "mcr.microsoft.com/devcontainers/python:3.11",
+    "customizations":{
+        "vscode":{
+            "extensions": [
+                "ms-python.python",
+                "ms-toolsai.jupyter",
+                "ms-python.vscode-pylance"
+            ]
+        }
+    },
+    "postCreateCommand": "python -m pip install --upgrade pip && python -m pip install numpy scipy simpy scikit-learn pandas matplotlib jupyter ipykernel freeqdsk torch",
+    
+    "remoteUser": "vscode"
+}

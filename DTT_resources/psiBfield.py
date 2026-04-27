@@ -31,14 +31,14 @@ def compute_B(g):
     dpsi_dZ = np.gradient(g.psi, z_coords, axis=1, edge_order=2)
 
     # Fields
-    BR = -(1 / r_coords) * dpsi_dZ
-    BZ = (1 / r_coords) * dpsi_dR
+    BR = -(1 / g.r_grid) * dpsi_dZ
+    BZ = (1 / g.r_grid) * dpsi_dR
 
     # Toroidal field
     psi_grid = np.linspace(g.psi.min(), g.psi.max(), len(g.fpol))
     fpol_interp = interp1d(psi_grid, g.fpol)
 
-    Bphi = fpol_interp(g.psi) / r_coords
+    Bphi = fpol_interp(g.psi) / g.r_grid
 
     
 
