@@ -55,18 +55,21 @@ def field_tracing(g, psi_norm, BR, BZ):
     # USER INPUTS
     # =========================
 
-    r_start = float(input("Enter r_start : ") or g.rmaxis + 0.1)
-    r_end   = float(input("Enter r_end   : ") or g.rbdry.max() - 0.1)
-    N       = int(input("Enter number of radial points N : ") or 10)
+    r_start_input = input(f"Enter r_start [default = g.rmaxis + 0.05 = {g.rmaxis + 0.05}] : ")
 
-    initial_h = float(
-        input("Enter RK4 step size initial_h [default=-0.001] : ") or -0.001)
+    r_end_input = input(f"Enter r_end [default = g.rbdry.max() - 0.01 = {g.rbdry.max() - 0.01}] : ")
 
-    tolerance = float(
-        input("Enter psi correction tolerance [default=1e-2] : ") or 1e-2)
+    r_start = eval(r_start_input, {"g": g}) if r_start_input else g.rmaxis + 0.05
 
-    max_step = int(
-        input("Enter maximum RK4 steps [default=60000] : ") or 60000)
+    r_end = eval(r_end_input, {"g": g}) if r_end_input else g.rbdry.max() - 0.01
+
+    N = int(input("Enter number of radial points N : ") or 10)
+
+    initial_h = float(input("Enter RK4 step size initial_h [default=-0.001] : ") or -0.001)
+
+    tolerance = float(input("Enter psi correction tolerance [default=1e-2] : ") or 1e-2)
+
+    max_step = int(input("Enter maximum RK4 steps [default=60000] : ") or 60000)
 
 
     # ===================
@@ -192,7 +195,10 @@ def field_tracing(g, psi_norm, BR, BZ):
 
 
 def grid_points(r_trajectory, z_trajectory):
-    
+
+    # =========================
+    # Arc Length Calculation
+    # =========================    
     cumulative_distances = []
     for i in range(len(r_trajectory)):
         dr = np.diff(r_trajectory[i])
@@ -204,7 +210,11 @@ def grid_points(r_trajectory, z_trajectory):
 
     print("Cumulative distances along trajectories computed.")
     
-    N0 = int(input("Enter number of grid points along first trajectory N_grid [default=10] : ") or 10)
+    # =========================
+    # User-defined grid spacing
+    # =========================
+
+    N0 = int(input("Enter number of grid points along first trajectory N_grid [default=10] : ") or 4)
     
     tol = float(input("Enter grid spacing tolerance tol [default=0.5] : ") or 0.5)
     
@@ -212,15 +222,20 @@ def grid_points(r_trajectory, z_trajectory):
 
     grid_distance_0 = np.linspace(0, total_length_0, N0)
     
+    # Reference grid spacing  
     ds0 = grid_distance_0[1] - grid_distance_0[0]
     
+    # Interpolate to find grid points for the first trajectory
     r_grid_0 = np.interp(grid_distance_0, cumulative_distances[0], r_trajectory[0])
     z_grid_0 = np.interp(grid_distance_0, cumulative_distances[0], z_trajectory[0])
 
-    
+    # Initialize grid point lists with the first trajectory's grid points
     r_grid_points = [r_grid_0]
     z_grid_points = [z_grid_0]
 
+    # =========================
+    # Grid Point Generation for other trajectories
+    # =========================
 
     for i in range(1, len(r_trajectory)):
 
@@ -234,6 +249,7 @@ def grid_points(r_trajectory, z_trajectory):
 
         ds = grid_distances[1] - grid_distances[0]
 
+        # Refine N until the grid spacing is within the specified tolerance
         while abs(ds - ds0) / ds0 > tol:
 
             N += 1
