@@ -65,7 +65,7 @@ def field_tracing(g, psi_norm, BR, BZ):
 
     N = int(input("Enter number of radial points N : ") or 10)
 
-    initial_h = float(input("Enter RK4 step size initial_h [default=-0.001] : ") or -0.001)
+    initial_h = float(input("Enter RK4 step size initial_h [default=-0.001(anticlockwise)] : ") or -1e-3)
 
     tolerance = float(input("Enter psi correction tolerance [default=1e-2] : ") or 1e-2)
 
@@ -86,8 +86,8 @@ def field_tracing(g, psi_norm, BR, BZ):
     #==========================
 
     def F(r_current, z_current):
-        if not (g.rbdry.min() <= r_current <= g.rbdry.max() and
-            g.zbdry.min() <= z_current <= g.zbdry.max()):
+        if not (g.rbdry.min()-0.01 <= r_current <= g.rbdry.max()+0.01 and
+            g.zbdry.min()-0.01 <= z_current <= g.zbdry.max()+0.01):
             return np.nan, np.nan
         
         BR_local = BR_interp((r_current, z_current))
@@ -170,7 +170,7 @@ def field_tracing(g, psi_norm, BR, BZ):
                     break
                 else:
                     h_current_step /= 2.0
-                    if h_current_step < 1e-7:
+                    if h_current_step < 1e-8:
                         refined_step_found = True
                         r_new, z_new = r_trial, z_trial
                         break
@@ -186,6 +186,7 @@ def field_tracing(g, psi_norm, BR, BZ):
 
             r_trajectory[i].append(r_new)
             z_trajectory[i].append(z_new)
+            print(f"Trajectory {i+1}/{N} Step {step_count} : r = {r_current:.4f}, z = {z_current:.4f}, psi = {psi_trial:.4f}, h = {h_current_step:.2e}")    
 
 
     print("Poloidal field line trajectories computed.")
