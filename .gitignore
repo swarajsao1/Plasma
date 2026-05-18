@@ -1,3 +1,6 @@
 .devcontainer/git 
 __pycache__/
 *.pyc
+DIIID/DIIID_resources/
+DTT/DTTN_resources/
+DTT/DTTP_resources/
