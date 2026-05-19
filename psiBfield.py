@@ -1,15 +1,13 @@
-import os 
-import sys
+from pathlib import Path
 import numpy as np
 from freeqdsk import geqdsk
 from scipy.interpolate import interp1d
 from scipy.interpolate import RegularGridInterpolator
 
 
-def extract_g(file_name="g_file.in"):
+def extract_g(gfile_path):
 
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(BASE_DIR, file_name)
+    file_path = Path(gfile_path)
 
     with open(file_path, 'r') as f:
         g = geqdsk.read(f)
