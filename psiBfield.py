@@ -72,6 +72,8 @@ def field_tracing(g, psi_norm, BR, BZ):
     print(f"""User inputs received. 
           r_start = {r_start}, r_end = {r_end}, N = {N}, initial_h = {initial_h}, tolerance = {tolerance}, max_step = {max_step}.
           Starting field line tracing...""")
+  
+  
     # ===================
     # Interpolators
     # ===================
